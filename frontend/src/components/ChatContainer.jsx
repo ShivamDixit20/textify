@@ -5,7 +5,7 @@ import ChatHeader from "./ChatHeader";
 import MessageInput from "./MessageInput";
 import MessageSkeleton from "./skeletons/MessageSkeleton";
 import { useAuthStore } from "../store/useAuthStore";
-import { formatMessageTime } from "../lib/utils";
+import { formatMessageTime, formatMessageDate, groupMessagesByDate } from "../lib/utils";
 
 const ChatContainer = () => {
   const {
@@ -47,8 +47,15 @@ const ChatContainer = () => {
     <div className="flex-1 flex flex-col overflow-auto">
       <ChatHeader />
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((message, index) => (
+      <div className="flex-1 overflow-y-auto p-4 space-y-6">
+        {Object.entries(groupMessagesByDate(messages)).map(([date, dateMessages]) => (
+          <div key={date} className="space-y-4">
+            <div className="flex justify-center">
+              <span className="bg-base-200 text-xs px-3 py-1 rounded-full">
+                {formatMessageDate(date)}
+              </span>
+            </div>
+            {dateMessages.map((message, index) => (
           <div
             key={message._id}
             className={`chat ${message.senderId === authUser._id ? "chat-end" : "chat-start"}`}
